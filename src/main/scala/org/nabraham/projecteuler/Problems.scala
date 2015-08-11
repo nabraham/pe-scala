@@ -1,5 +1,8 @@
 package org.nabraham.projecteuler
 
+import java.text.SimpleDateFormat
+import java.util.{Date, Calendar}
+
 import Common.fibs
 import Common.input
 import Common.primes
@@ -203,10 +206,12 @@ object Problems {
       80 -> "eighty", 90 -> "ninety")
 
     def english(n: Int): String = {
-      if (n < 20) { words(n) }
+      if (n < 20) {
+        words(n)
+      }
       else if (n < 100) {
         val tens = n / 10
-        words(tens * 10) + english(n - tens*10)
+        words(tens * 10) + english(n - tens * 10)
       } else {
         val hundreds = n / 100
         val spacer = if (n % 100 == 0) "" else "and"
@@ -216,6 +221,41 @@ object Problems {
 
     val rez = (0 to 999).map(english).mkString("").length + "onethousand".length
     assert(rez == 21124)
+  }
+
+  //Find the maximum total from top to bottom of the triangle below:
+  def p018(): Unit = {
+    val rows = input("018.txt").map(_.split(" ").toList.map(_.toInt))
+
+    def expand(row: List[Int]): List[Int] = {
+      val left = row.head :: row
+      val right = (row.last :: row.reverse).reverse
+      (left, right).zipped.map(_ max _)
+    }
+
+    def reduce(pyramid: List[List[Int]]): List[Int] = {
+      if (pyramid.length <= 1) {
+        pyramid.head
+      }
+      else {
+        val expanded = expand(pyramid.head)
+        val convolved = (expanded, pyramid.tail.head).zipped.map(_ + _)
+        reduce(convolved :: pyramid.tail.tail)
+      }
+    }
+
+    assert(reduce(rows).max == 1074)
+  }
+
+  //How many Sundays fell on the first of the month during the twentieth century (1 Jan 1901 to 31 Dec 2000)?
+  def p019(): Unit = {
+    val cal = Calendar.getInstance()
+    val sdf = new SimpleDateFormat("yyyy/M/d")
+    val firsts = for (year <- (1901 to 2000);
+                      month <- (1 to 12)
+    ) yield { cal.setTime(sdf.parse("" + year + "/" +  month + "/1" )); cal.get(Calendar.DAY_OF_WEEK) }
+
+    assert(firsts.count(_ == 1) == 171)
   }
 
 }

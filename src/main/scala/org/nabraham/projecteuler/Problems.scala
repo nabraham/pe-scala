@@ -272,13 +272,23 @@ object Problems {
     }
 
     val zipped = (0 until 10000).map(divisors(_).sum).zipWithIndex
-    def amicable(entry: (Int, Int)): Boolean = {
-      if (entry._1 >= zipped.length) false
-      else zipped(entry._1)._1 == entry._2 && entry._1 != entry._2
+    def amicable(e: (Int, Int)): Boolean = {
+      e._1 <= zipped.length && zipped(e._1)._1 == e._2 && e._1 != e._2
     }
 
     val ams = zipped.filter(amicable).map(_._2)
     assert(ams.sum == 31626)
   }
 
+  //For example, when the list is sorted into alphabetical order, COLIN, which is worth 3 + 15 + 12 + 9 + 14 = 53,
+  //is the 938th name in the list. So, COLIN would obtain a score of 938 × 53 = 49714.
+  //What is the total of all the name scores in the file?
+  def p022(): Unit = {
+    val cleaned = input("022.txt").mkString("").split(",").map(_.replaceAll("\"","")).sorted
+    assert(cleaned
+      .map(_.toCharArray.map(_.toInt - 64).sum)
+      .zipWithIndex
+      .map(zi => zi._1 * (zi._2 + 1))
+      .sum == 871198282)
+  }
 }

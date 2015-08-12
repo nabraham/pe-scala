@@ -31,4 +31,6 @@ object Main extends scala.App {
   timeIt("017", p017)
   timeIt("018", p018)
   timeIt("019", p019)
+  timeIt("020", p020)
+  timeIt("021", p021)
 }

@@ -258,4 +258,27 @@ object Problems {
     assert(firsts.count(_ == 1) == 171)
   }
 
+  //Find the sum of the digits in the number 100!
+  def p020(): Unit = {
+    val rez = (BigInt(2) to BigInt(100)).product.toString.toCharArray.map(_.toString.toInt).sum
+    assert(rez == 648)
+  }
+
+  //Evaluate the sum of all the amicable numbers under 10000
+  def p021(): Unit = {
+    def divisors(n: Int): List[Int] = {
+      if (n == 0) List()
+      else (1 to n/2).filter(n % _ == 0).toList
+    }
+
+    val zipped = (0 until 10000).map(divisors(_).sum).zipWithIndex
+    def amicable(entry: (Int, Int)): Boolean = {
+      if (entry._1 >= zipped.length) false
+      else zipped(entry._1)._1 == entry._2 && entry._1 != entry._2
+    }
+
+    val ams = zipped.filter(amicable).map(_._2)
+    assert(ams.sum == 31626)
+  }
+
 }

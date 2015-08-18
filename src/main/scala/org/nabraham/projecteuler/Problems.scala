@@ -369,5 +369,50 @@ object Problems {
     assert(rez == solutions("26").toInt)
   }
   problemMap += ("026" -> p026)
+
+  //  Considering quadratics of the form:
+  //
+  //    n² + an + b, where |a| < 1000 and |b| < 1000
+  //
+  //  where |n| is the modulus/absolute value of n
+  //    e.g. |11| = 11 and |−4| = 4
+  //
+  //  Find the product of the coefficients, a and b, for the quadratic expression that produces the maximum number of
+  //  primes for consecutive values of n, starting with n = 0.
+  def p027(): Unit = {
+    val coefs = (-999 to 999)
+    def from(n: Int): Stream[Int] = { n #:: from(n + 1) }
+    def quadratic(a: Int, b: Int)(n: Int) = { n*n + a*n + b }
+    val twoMil = primes.takeWhile(_ <= 200000).toList
+    def isPrime(n: Int): Boolean = {
+      twoMil.contains(n)
+    }
+    def quadraticPrimeLength(a: Int, b: Int): Int = {
+      from(0).takeWhile(n => isPrime(quadratic(a,b)(n))).toList.length
+    }
+    val rez = coefs.flatMap(a => coefs.map(b => ((a,b), quadraticPrimeLength(a,b)))).maxBy(_._2)
+    assert(rez._1._1 * rez._1._2 == solutions("27").toInt)
+  }
+  problemMap += ("027" -> p027)
+
+  //  Starting with the number 1 and moving to the right in a clockwise direction a 5 by 5 spiral is formed as follows:
+  //
+  //  21 22 23 24 25
+  //  20  7  8  9 10
+  //  19  6  1  2 11
+  //  18  5  4  3 12
+  //  17 16 15 14 13
+  //
+  //  It can be verified that the sum of the numbers on the diagonals is 101.
+  //
+  //  What is the sum of the numbers on the diagonals in a 1001 by 1001 spiral formed in the same way?
+  def p028(): Unit = {
+    //The lower right (LR) number of each centered square closed form is: 4n^2 - 10n + 7
+    //The other corners are LR + 2(n-1), + 4(n-1), + 6(n-1)
+    //Sum of square corners: 4*LR + 12(n-1) = 16n^2 - 28n + 16, for n > 1
+    assert(1 + (2 to 501).map(n => 16*n*n - 28*n + 16).sum == solutions("28").toInt)
+  }
+  problemMap += ("028" -> p028)
+
 }
 

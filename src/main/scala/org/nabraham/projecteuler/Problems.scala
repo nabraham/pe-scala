@@ -1,15 +1,9 @@
 package org.nabraham.projecteuler
 
 import java.text.SimpleDateFormat
-import java.util.{Date, Calendar}
+import java.util.Calendar
 
-import Common.bigFibs
-import Common.fibs
-import Common.input
-import Common.primes
-import Common.solutions
-
-import scala.collection.convert.Wrappers.MutableSetWrapper
+import org.nabraham.projecteuler.Common.{bigFibs, fibs, input, primes, solutions}
 
 /**
  * Created by nabraham on 8/10/15.
@@ -492,6 +486,29 @@ object Problems {
   }
   problemMap += ("031" -> p031)
 
+  //  We shall say that an n-digit number is pandigital if it makes use of all the digits 1 to n exactly once;
+  //  for example, the 5-digit number, 15234, is 1 through 5 pandigital.
+  //
+  //   The product 7254 is unusual, as the identity, 39 × 186 = 7254, containing multiplicand, multiplier, and
+  //   product is 1 through 9 pandigital.
+  //
+  //   Find the sum of all products whose multiplicand/multiplier/product identity can be written as a 1 through 9
+  //   pandigital.
+  //
+  //  HINT: Some products can be obtained in more than one way so be sure to only include it once in your sum.
+  def p032(): Unit = {
+    val pandigits = (1 to 9).toSet
+    def uniqueNumbers(a: Int, b: Int, c: Int): Boolean = {
+      val nums = List(a,b,c).flatMap(_.toString.toCharArray.map(_ - 48))
+      nums.size == pandigits.size && nums.toSet == pandigits
+    }
+    def pandigital(n: Int): Boolean = {
+      divisors(n).exists(d => uniqueNumbers(n/d, d, n))
+    }
+    val rez = (1000 to 10000).filter(pandigital(_))
+    assert(rez.sum == solutions("32").toInt)
+  }
+  problemMap += ("032" -> p032)
 
 }
 

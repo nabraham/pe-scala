@@ -12,7 +12,7 @@ object Main extends scala.App {
     println("Finished " + s + " in " + (stop - start) + " ms")
   }
 
-  val takeTooLong = "010,023,027".split(",")
+  val takeTooLong = "010,023,027,031".split(",")
   problemMap.keys.toList.sorted.foreach(key => if (!takeTooLong.contains(key)) {
     timeIt(key, problemMap(key))
   })

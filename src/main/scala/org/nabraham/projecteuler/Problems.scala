@@ -510,5 +510,82 @@ object Problems {
   }
   problemMap += ("032" -> p032)
 
+  //  The fraction 49/98 is a curious fraction, as an inexperienced mathematician in attempting to simplify it may
+  //  incorrectly believe that 49/98 = 4/8, which is correct, is obtained by cancelling the 9s.
+  //
+  //  We shall consider fractions like, 30/50 = 3/5, to be trivial examples.
+  //
+  //  There are exactly four non-trivial examples of this type of fraction, less than one in value, and containing two
+  //  digits in the numerator and denominator.
+  //
+  //  If the product of these four fractions is given in its lowest common terms, find the value of the denominator.
+  def p033(): Unit = {
+    def simplify(num: Int, denom: Int): (Int, Int) = {
+      (2 to num).reverse.find(x => num % x == 0 && denom % x == 0) match {
+        case Some(i) => simplify(num/i, denom/i)
+        case None => (num,denom)
+      }
+    }
+
+    val nums = (10 to 99)
+    def isCurious(a: Int, b: Int): Boolean = {
+      val aList = a.toString.toCharArray.map(_ - 48)
+      val bList = b.toString.toCharArray.map(_ - 48)
+      if (aList(1) == bList(1)) { false }
+      else if (aList(0) == bList(1)) {
+        aList(1) * b == bList(0) * a
+      } else if (aList(1) == bList(0)) {
+        aList(0) * b == bList(1) * a
+      } else  {
+        false
+      }
+    }
+
+    val fracs = nums.flatMap(a => (a+1 to 99).map(b => (a,b))).filter(f => isCurious(f._1, f._2))
+    val num = fracs.map(_._1).product
+    val denom = fracs.map(_._2).product
+    assert(simplify(num, denom)._2 == solutions("33").toInt)
+  }
+  problemMap += ("033" -> p033)
+
+  //    145 is a curious number, as 1! + 4! + 5! = 1 + 24 + 120 = 145.
+  //
+  //    Find the sum of all numbers which are equal to the sum of the factorial of their digits.
+  //
+  //    Note: as 1! = 1 and 2! = 2 are not sums they are not included.
+  def p034(): Unit = {
+    val fact = Map((0 to 9).map(n => n -> (1 to n).product): _*)
+    def isSumOfFactorial(n: Int): Boolean = {
+      n.toString.toCharArray.map(_ - 48).map(fact(_)).sum == n
+    }
+    val max = 99999 // this is cheating, 9! * n = 10^(n-1) means we should check 7-digit numbers
+    val nums = (10 to max).filter(isSumOfFactorial)
+    assert(nums.sum == solutions("34").toInt)
+  }
+  problemMap += ("034" -> p034)
+
+  //  The number, 197, is called a circular prime because all rotations of the digits: 197, 971, and 719, are
+  //  themselves prime.
+  //
+  //  There are thirteen such primes below 100: 2, 3, 5, 7, 11, 13, 17, 31, 37, 71, 73, 79, and 97.
+  //
+  //  How many circular primes are there below one million?
+  def p035(): Unit = {
+    val ps = primes.takeWhile(_ < 1000000).toSet
+
+    def rotate(n: Int, shift: Int): Int = {
+      val front = n.toString.substring(0, shift)
+      val back = n.toString.substring(shift)
+      (back + front).toInt
+    }
+
+    def rotations(n: Int): List[Int] = {
+      (0 until n.toString.length).map(rotate(n, _)).toList
+    }
+
+    assert(ps.filter(n => rotations(n).forall(ps.contains(_))).size == solutions("35").toInt)
+  }
+  problemMap += ("035" -> p035)
+
 }
 

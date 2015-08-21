@@ -587,5 +587,19 @@ object Problems {
   }
   problemMap += ("035" -> p035)
 
+  //  The decimal number, 585 = 10010010012 (binary), is palindromic in both bases.
+  //
+  //    Find the sum of all numbers, less than one million, which are palindromic in base 10 and base 2.
+  //
+  //  (Please note that the palindromic number, in either base, may not include leading zeros.)
+  def p036(): Unit = {
+    def palindrome(n: Int, radix: Int): Boolean = {
+      val s = java.lang.Integer.toString(n, radix)
+      s == s.reverse
+    }
+    assert((1 to 999999).filter(x => palindrome(x,2) && palindrome(x,10)).sum == solutions("36").toInt)
+  }
+  problemMap += ("036" -> p036)
+
 }
 

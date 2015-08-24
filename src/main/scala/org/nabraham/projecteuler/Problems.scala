@@ -601,5 +601,28 @@ object Problems {
   }
   problemMap += ("036" -> p036)
 
+  //  The number 3797 has an interesting property. Being prime itself, it is possible to continuously remove digits
+  //  from left to right, and remain prime at each stage: 3797, 797, 97, and 7. Similarly we can work from right to left:
+  //  3797, 379, 37, and 3.
+  //
+  //  Find the sum of the only eleven primes that are both truncatable from left to right and right to left.
+  //
+  //  NOTE: 2, 3, 5, and 7 are not considered to be truncatable primes.
+  def p037(): Unit = {
+    def truncate(n: Int, left: Boolean = true): List[Int] = {
+      val digits = n.toString.toCharArray.map(_ - 48)
+      if (left) {
+        (1 to digits.length).map(t => digits.take(t).mkString("").toInt).toList
+      } else {
+        (1 to digits.length).map(t => digits.takeRight(t).mkString("").toInt).toList
+      }
+    }
+
+    val pMil = primes.takeWhile(_ < 1000000)
+    val pSet = pMil.toSet
+    val rez = pMil.dropWhile(_ < 10).filter(p => (truncate(p) ::: truncate(p, false)).forall(pSet.contains(_)))
+    assert(rez.sum == solutions("37").toInt)
+  }
+  problemMap += ("037" -> p037)
 }
 

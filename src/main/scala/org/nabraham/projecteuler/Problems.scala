@@ -624,5 +624,49 @@ object Problems {
     assert(rez.sum == solutions("37").toInt)
   }
   problemMap += ("037" -> p037)
+
+  //  Take the number 192 and multiply it by each of 1, 2, and 3:
+  //
+  //  192 × 1 = 192
+  //  192 × 2 = 384
+  //  192 × 3 = 576
+  //
+  //  By concatenating each product we get the 1 to 9 pandigital, 192384576. We will call 192384576 the concatenated
+  //  product of 192 and (1,2,3)
+  //
+  //  The same can be achieved by starting with 9 and multiplying by 1, 2, 3, 4, and 5, giving the pandigital,
+  //  918273645, which is the concatenated product of 9 and (1,2,3,4,5).
+  //
+  //  What is the largest 1 to 9 pandigital 9-digit number that can be formed as the concatenated product of an integer
+  //  with (1,2, ... , n) where n > 1?
+  def p038(): Unit = {
+    val panSet = "123456789".toSet
+    def isPandigital(n: Int): Boolean = {
+      (1 to 2).map(_ * n).mkString("").toCharArray.toSet == panSet
+    }
+    val rez = (9000 to 9999).filter(isPandigital).max
+    assert(rez.toString + (rez * 2).toString == solutions("38"))
+  }
+  problemMap += ("038" -> p038)
+
+  //  If p is the perimeter of a right angle triangle with integral length sides, {a,b,c}, there are exactly three
+  //  solutions for p = 120.
+  //
+  //  {20,48,52}, {24,45,51}, {30,40,50}
+  //
+  //  For which value of p ≤ 1000, is the number of solutions maximised?
+  def p039(): Unit = {
+    def right(a: Int, b: Int, c: Int): Boolean = { a*a + b*b == c*c }
+    def rights(p: Int): Int = {
+      val tris = for (a <- 1 to p - 2;
+           b <- a + 1 to p - 2;
+           c = (p - a - b);
+           if right(a,b,c)) yield Set(a,b,c)
+      tris.size
+    }
+    assert((2 to 1000).map(p => (p, rights(p))).maxBy(_._2)._1 == solutions("39").toInt)
+  }
+  problemMap += ("039" -> p039)
+
 }
 

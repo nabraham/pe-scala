@@ -661,12 +661,42 @@ object Problems {
       val tris = for (a <- 1 to p - 2;
            b <- a + 1 to p - 2;
            c = (p - a - b);
-           if right(a,b,c)) yield Set(a,b,c)
+           if right(a,b,c)) yield (a,b,c)
       tris.size
     }
     assert((2 to 1000).map(p => (p, rights(p))).maxBy(_._2)._1 == solutions("39").toInt)
   }
   problemMap += ("039" -> p039)
 
-}
+  //  An irrational decimal fraction is created by concatenating the positive integers:
+  //
+  //  0.123456789101112131415161718192021...
+  //
+  //  It can be seen that the 12th digit of the fractional part is 1.
+  //
+  //  If dn represents the nth digit of the fractional part, find the value of the following expression.
+  //
+  //    d1 × d10 × d100 × d1000 × d10000 × d100000 × d1000000
+  def p040(): Unit = {
+    def genChamp(s: Int, n: Int =1, c: Vector[Char]=Vector()): Vector[Char] = {
+      if (c.size >= s) { c }
+      else { genChamp(s, n+1, c ++ n.toString.toCharArray.toVector) }
+    }
+    val champ = genChamp(1000000)
+    val rez = (0 to 6).map(p => champ(BigInt(10).pow(p).toInt - 1).toString.toInt)
+    assert(rez.product == solutions("40").toInt)
+  }
+  problemMap += ("040" -> p040)
 
+  //  We shall say that an n-digit number is pandigital if it makes use of all the digits 1 to n exactly once. For
+  //  example, 2143 is a 4-digit pandigital and is also prime.
+  //
+  //  What is the largest n-digit pandigital prime that exists?
+  def p041(): Unit = {
+    //all 8,9 pandigital numbers are divisible by 3, so only check 7
+    def isPrime(n: Int):Boolean = { (2 to Math.sqrt(n).toInt).forall(n % _ != 0) }
+    val rez = (1 to 7).reverse.permutations.find(p => isPrime(p.mkString("").toInt))
+    assert(rez.get.mkString("") == solutions("41"))
+  }
+  problemMap += ("041" -> p041)
+}

@@ -791,4 +791,58 @@ object Problems {
     assert(findNext(286L, 166L, 144L)._4 == solutions("45").toLong)
   }
   problemMap += ("045" -> p045)
+
+  //  It was proposed by Christian Goldbach that every odd composite number can be written as the sum of a prime and
+  //  twice a square.
+  //
+  //  9 = 7 + 2×1^2
+  //  15 = 7 + 2×2^2
+  //  21 = 3 + 2×3^2
+  //  25 = 7 + 2×3^2
+  //  27 = 19 + 2×2^2
+  //  33 = 31 + 2×1^2
+  //
+  //  It turns out that the conjecture was false.
+  //
+  //  What is the smallest odd composite that cannot be written as the sum of a prime and twice a square?
+  def p046(): Unit = {
+    def p1000 = primes.take(10000).toSet
+    def from(n: Int): Stream[Int] = n #:: from(n +2)
+    def isPrime(n: Int): Boolean = { p1000.contains(n) }
+    def oddComposites(n: Int = 9): Stream[Int] = {
+      val next = from(n+2).find(!isPrime(_))
+      n #:: oddComposites(next.get)
+    }
+    def sq(n: Int): Int = { n*n }
+    def summable(n: Int): Boolean = {
+      (1 to Math.sqrt(n).toInt).exists(i => isPrime(n - 2 * sq(i)))
+    }
+    assert(oddComposites().find(!summable(_)).get == solutions("46").toInt)
+  }
+  problemMap += ("046" -> p046)
+
+  //  The first two consecutive numbers to have two distinct prime factors are:
+  //
+  //  14 = 2 × 7
+  //  15 = 3 × 5
+  //
+  //  The first three consecutive numbers to have three distinct prime factors are:
+  //
+  //  644 = 2² × 7 × 23
+  //  645 = 3 × 5 × 43
+  //  646 = 2 × 17 × 19.
+  //
+  //  Find the first four consecutive integers to have four distinct prime factors. What is the first of these numbers?
+  def p047(): Unit = {
+    def from(n: Int): Stream[Int] = { n #:: from(n+1) }
+    def primeFactors(n: Int, np: Int): Boolean = {
+      primes.takeWhile(_ <= n/2).count(n % _ == 0) >= np
+    }
+    def consecutivePrimes(n: Int, np: Int): Boolean = {
+      (n to (n + np - 1)).forall(i => primeFactors(i,np))
+    }
+    assert(from(644).find(n => consecutivePrimes(n,4)).get == solutions("47").toInt)
+  }
+  problemMap += ("047" -> p047)
+
 }

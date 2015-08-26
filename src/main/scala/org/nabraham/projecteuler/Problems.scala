@@ -845,4 +845,11 @@ object Problems {
   }
   problemMap += ("047" -> p047)
 
+  //  The series, 1^1 + 2^2 + 3^3 + ... + 10^10 = 10405071317.
+  //
+  //  Find the last ten digits of the series, 1^1 + 2^2 + 3^3 + ... + 1000^1000.
+  def p048(): Unit = {
+    assert((1 to 1000).map(x => BigInt(x).pow(x)).sum.toString.takeRight(10) == solutions("48"))
+  }
+  problemMap += ("048" -> p048)
 }

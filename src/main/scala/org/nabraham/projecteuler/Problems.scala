@@ -212,7 +212,7 @@ object Problems {
   //What is the sum of the digits of the number 2^1000?
   def p016(): Unit = {
     val rez = Seq.fill(1000)(BigInt(2)).product.toString.toCharArray.map(_.toString.toInt).sum
-    assert(rez == 1366)
+    assert(rez == solutions("16").toInt)
   }
   problemMap += ("016" -> p016)
 
@@ -236,7 +236,7 @@ object Problems {
     }
 
     val rez = (0 to 999).map(english).mkString("").length + "onethousand".length
-    assert(rez == 21124)
+    assert(rez == solutions("17").toInt)
   }
   problemMap += ("017" -> p017)
 
@@ -260,8 +260,7 @@ object Problems {
         reduce(convolved :: pyramid.tail.tail)
       }
     }
-
-    assert(reduce(rows).max == 1074)
+    assert(reduce(rows).max == solutions("18").toInt)
   }
   problemMap += ("018" -> p018)
 
@@ -273,13 +272,13 @@ object Problems {
                       month <- (1 to 12)
     ) yield { cal.setTime(sdf.parse("" + year + "/" +  month + "/1" )); cal.get(Calendar.DAY_OF_WEEK) }
 
-    assert(firsts.count(_ == 1) == 171)
+    assert(firsts.count(_ == 1) == solutions("19").toInt)
   }
 
   //Find the sum of the digits in the number 100!
   def p020(): Unit = {
     val rez = (BigInt(2) to BigInt(100)).product.toString.toCharArray.map(_.toString.toInt).sum
-    assert(rez == 648)
+    assert(rez == solutions("20").toInt)
   }
   problemMap += ("020" -> p020)
 
@@ -295,7 +294,7 @@ object Problems {
     }
 
     val ams = zipped.filter(amicable).map(_._2)
-    assert(ams.sum == 31626)
+    assert(ams.sum == solutions("21").toInt)
   }
   problemMap += ("021" -> p021)
 
@@ -308,7 +307,7 @@ object Problems {
       .map(_.toCharArray.map(_.toInt - 64).sum)
       .zipWithIndex
       .map(zi => zi._1 * (zi._2 + 1))
-      .sum == 871198282)
+      .sum == solutions("22").toInt)
   }
   problemMap += ("022" -> p022)
 
@@ -872,5 +871,37 @@ object Problems {
     assert(other.mkString("") == solutions("49"))
   }
   problemMap += ("049" -> p049)
+
+  //  The prime 41, can be written as the sum of six consecutive primes:
+  //
+  //  41 = 2 + 3 + 5 + 7 + 11 + 13
+  //  This is the longest sum of consecutive primes that adds to a prime below one-hundred.
+  //
+  //    The longest sum of consecutive primes below one-thousand that adds to a prime, contains 21 terms, and is equal to 953.
+  //
+  //  Which prime, below one-million, can be written as the sum of the most consecutive primes?
+  def p050(): Unit = {
+    val ps = primes.takeWhile(_ < 1000000)
+    val psSet = ps.toSet
+    def takeUntilOver(s: Stream[Int], limit: Int, total: Int = 0, biggest: Int=1, size: Int = 0, count: Int=0): (Int, Int) = {
+      if (limit <= 0 || s.isEmpty) { (biggest, size) }
+      else {
+        val t = total + s.head
+        if (psSet.contains(t)) {
+          takeUntilOver(s.tail, limit - s.head, t, t, count + 1, count + 1)
+        } else {
+          takeUntilOver(s.tail, limit - s.head, t, biggest, size, count + 1)
+        }
+      }
+    }
+
+    def longestWindow(n: Int, limit: Int): (Int, Int) = {
+      val start = ps.dropWhile(_ < n)
+      takeUntilOver(start, limit)
+    }
+    val rez = ps.map(longestWindow(_,1000000)).maxBy(_._2)
+    assert(rez._1 == solutions("50").toInt)
+  }
+  problemMap += ("050" -> p050)
 
 }

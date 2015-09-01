@@ -904,4 +904,54 @@ object Problems {
   }
   problemMap += ("050" -> p050)
 
+  //  By replacing the 1st digit of the 2-digit number *3, it turns out that six of the nine possible values:
+  //      13, 23, 43, 53, 73, and 83, are all prime.
+  //
+  //  By replacing the 3rd and 4th digits of 56**3 with the same digit, this 5-digit number is the first example having
+  //  seven primes among the ten generated numbers, yielding the family: 56003, 56113, 56333, 56443, 56663, 56773, and
+  //  56993. Consequently 56003, being the first member of this family, is the smallest prime with this property.
+  //
+  //  Find the smallest prime which, by replacing part of the number (not necessarily adjacent digits) with the same
+  //  digit, is part of an eight prime value family.
+  def p051(): Unit = {
+    def asterize(s: String, indices: List[Int]): String = {
+      if (indices.isEmpty) { s }
+      else {
+        asterize(s.updated(indices.head - 1, "*").mkString(""), indices.tail)
+      }
+    }
+
+    def isValid(ast: String, n: String, seen: Char = ' '): Boolean = {
+      if (ast.isEmpty && n.isEmpty) { true }
+      else if (ast.isEmpty || n.isEmpty) { false }
+      else if (ast.head == '*') {
+        if (seen != ' ') {
+          if (n.head != seen) {
+            false
+          } else {
+            isValid(ast.tail, n.tail, seen)
+          }
+        } else {
+          isValid(ast.tail, n.tail, n.head)
+        }
+      } else { isValid(ast.tail, n.tail, seen) }
+    }
+
+    def replaceNChars(s: String, n: Int): List[String] = {
+      (1 to s.length).combinations(n).toList.map(indices => asterize(s, indices.toList)).filter(a => isValid(a, s))
+    }
+
+    def genFamilies(n: Int): List[String] = {
+      val nStr = n.toString
+      (1 to nStr.length - 1).flatMap(c => replaceNChars(nStr, c)).toList
+    }
+
+    val fams = primes.dropWhile(_ < 10).takeWhile(_ < 1000000).flatMap(p => genFamilies(p).map(f => (f, p)))
+    val rez = fams.groupBy(_._1).toList.filter(_._2.length == 8).minBy(_._2.map(_._2).min)
+    assert(rez._1.replaceAll("\\*", "1") == solutions("51"))
+  }
+  problemMap += ("051" -> p051)
+
+
+
 }

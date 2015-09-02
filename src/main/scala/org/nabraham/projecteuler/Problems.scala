@@ -3,7 +3,7 @@ package org.nabraham.projecteuler
 import java.text.SimpleDateFormat
 import java.util.Calendar
 
-import org.nabraham.projecteuler.Common.{bigFibs, fibs, input, primes, solutions}
+import org.nabraham.projecteuler.Common.{bigFibs, fibs, input, primes, solutions, from}
 
 /**
  * Created by nabraham on 8/10/15.
@@ -374,7 +374,6 @@ object Problems {
   //  primes for consecutive values of n, starting with n = 0.
   def p027(): Unit = {
     val coefs = (-999 to 999)
-    def from(n: Int): Stream[Int] = { n #:: from(n + 1) }
     def quadratic(a: Int, b: Int)(n: Int) = { n*n + a*n + b }
     val twoMil = primes.takeWhile(_ <= 200000).toList
     def isPrime(n: Int): Boolean = {
@@ -806,7 +805,6 @@ object Problems {
   //  What is the smallest odd composite that cannot be written as the sum of a prime and twice a square?
   def p046(): Unit = {
     def p1000 = primes.take(10000).toSet
-    def from(n: Int): Stream[Int] = n #:: from(n +2)
     def isPrime(n: Int): Boolean = { p1000.contains(n) }
     def oddComposites(n: Int = 9): Stream[Int] = {
       val next = from(n+2).find(!isPrime(_))
@@ -833,7 +831,6 @@ object Problems {
   //
   //  Find the first four consecutive integers to have four distinct prime factors. What is the first of these numbers?
   def p047(): Unit = {
-    def from(n: Int): Stream[Int] = { n #:: from(n+1) }
     def primeFactors(n: Int, np: Int): Boolean = {
       primes.takeWhile(_ <= n/2).count(n % _ == 0) >= np
     }
@@ -915,26 +912,12 @@ object Problems {
   //  digit, is part of an eight prime value family.
   def p051(): Unit = {
     def asterize(s: String, indices: List[Int]): String = {
-      if (indices.isEmpty) { s }
-      else {
-        asterize(s.updated(indices.head - 1, "*").mkString(""), indices.tail)
-      }
+      indices.foldLeft(s)((str, i) => str.updated(i-1,"*").mkString(""))
     }
 
-    def isValid(ast: String, n: String, seen: Char = ' '): Boolean = {
-      if (ast.isEmpty && n.isEmpty) { true }
-      else if (ast.isEmpty || n.isEmpty) { false }
-      else if (ast.head == '*') {
-        if (seen != ' ') {
-          if (n.head != seen) {
-            false
-          } else {
-            isValid(ast.tail, n.tail, seen)
-          }
-        } else {
-          isValid(ast.tail, n.tail, n.head)
-        }
-      } else { isValid(ast.tail, n.tail, seen) }
+    def isValid(ast: String, n: String): Boolean = {
+      val as = (0 until ast.length).filter(i => ast.charAt(i) == '*')
+      as.map(i => n.charAt(i)).distinct.length == 1
     }
 
     def replaceNChars(s: String, n: Int): List[String] = {
@@ -952,6 +935,47 @@ object Problems {
   }
   problemMap += ("051" -> p051)
 
+  //  It can be seen that the number, 125874, and its double, 251748, contain exactly the same digits, but in
+  //  a different order.
+  //
+  //  Find the smallest positive integer, x, such that 2x, 3x, 4x, 5x, and 6x, contain the same digits.
+  def p052(): Unit = {
+    def multiples(m: Int, n: Int): List[Int] = { (1 to m).map(_ * n).toList }
+    def sortInt(n: Int): Int = { n.toString.toCharArray.sorted.mkString("").toInt }
+    val rez = from(1).find(n => multiples(6, n).map(sortInt).distinct.length == 1)
+    assert(rez.get == solutions("52").toInt)
+  }
+  problemMap += ("052" -> p052)
 
+  //  There are exactly ten ways of selecting three from five, 12345:
+  //
+  //  123, 124, 125, 134, 135, 145, 234, 235, 245, and 345
+  //
+  //  In combinatorics, we use the notation, 5C3 = 10.
+  //
+  //  In general,
+  //  nCr =
+  //    n!
+  //      r!(n−r)!
+  //  ,where r ≤ n, n! = n×(n−1)×...×3×2×1, and 0! = 1.
+  //
+  //  It is not until n = 23, that a value exceeds one-million: 23C10 = 1144066.
+  //
+  //  How many, not necessarily distinct, values of  nCr, for 1 ≤ n ≤ 100, are greater than one-million?
+  def p053(): Unit = {
+    def biggerThan(n: Int, k: Int, thresh: Int): Boolean = {
+      val num = (k+1 to n)
+      val denom = (1 to (n-k))
+      (num.map(BigInt(_)).product / denom.map(BigInt(_)).product) > thresh
+    }
+
+    val all = for (n <- 1 to 100; k <- 1 until n) yield biggerThan(n,k,1000000)
+    assert(all.count(p => p) == solutions("53").toInt)
+  }
+  problemMap += ("053" -> p053)
+
+  //How many poker hands does player 1 win
+  def p054(): Unit = {
+  }
 
 }

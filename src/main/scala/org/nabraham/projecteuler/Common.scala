@@ -13,6 +13,8 @@ object Common {
     if (primes.takeWhile(p => p * p <= n).exists(n % _ == 0)) sieve(n + 2)
     else n #:: sieve(n + 2)
 
+  def from(n: Int): Stream[Int] = { n #:: from(n+1) }
+
   def input(filename: String): List[String] = {
     scala.io.Source.fromFile("input/" + filename).getLines.toList
   }

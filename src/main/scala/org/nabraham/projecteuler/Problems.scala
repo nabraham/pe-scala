@@ -17,6 +17,7 @@ object Problems {
     val rez = (3 until 1000).filter(x => x % 3 == 0 || x % 5 == 0).sum
     assert(rez == solutions("1").toInt)
   }
+
   problemMap += ("001" -> p001)
 
   //By considering the terms in the Fibonacci sequence whose values do not exceed four million,
@@ -25,6 +26,7 @@ object Problems {
     val rez = fibs.takeWhile(_ < 4000000).filter(_ % 2 == 0).sum
     assert(rez == solutions("2").toInt)
   }
+
   problemMap += ("002" -> p002)
 
   //What is the largest prime factor of the number 600851475143 ?
@@ -53,6 +55,7 @@ object Problems {
     val rez = factorize(600851475143L, 2, 1)
     assert(rez == solutions("3").toInt)
   }
+
   problemMap += ("003" -> p003)
 
   //Find the largest palindrome made from the product of two 3-digit numbers.
@@ -61,6 +64,7 @@ object Problems {
     val rez = nums.flatMap(x => nums.map(y => y * x)).filter(z => z.toString == z.toString.reverse).max
     assert(rez == solutions("4").toInt)
   }
+
   problemMap += ("004" -> p004)
 
   //What is the smallest number divisible by each of the numbers 1 to 20?*
@@ -84,6 +88,7 @@ object Problems {
     val rez = (2 to 20).foldLeft(List(1))(requiredFactors).product
     assert(rez == solutions("5").toInt)
   }
+
   problemMap += ("005" -> p005)
 
   //Find the difference between the sum of the squares of the first one hundred natural numbers and the square of the sum.
@@ -92,12 +97,14 @@ object Problems {
     val squareSums = Math.pow((1 to 100).sum, 2).toInt
     assert(squareSums - sumSquares == solutions("6").toInt)
   }
+
   problemMap += ("006" -> p006)
 
   //What is the 10 001st prime number?
   def p007(): Unit = {
     assert(primes(10000) == solutions("7").toInt)
   }
+
   problemMap += ("007" -> p007)
 
   //Find the thirteen adjacent digits in the 1000-digit number that have the
@@ -107,6 +114,7 @@ object Problems {
     //TODO - why is this wrong?
     //assert(rez.toLong == solutions("8").toLong)
   }
+
   problemMap += ("008" -> p008)
 
   //There exists exactly one Pythagorean triplet for which a + b + c = 1000.
@@ -119,6 +127,7 @@ object Problems {
     val rez = for (a <- nums; b <- 1 to a; c = 1000 - (a + b) if sq(a) + sq(b) == sq(c)) yield a * b * c
     assert(rez.head == solutions("9").toInt)
   }
+
   problemMap += ("009" -> p009)
 
   //Find the sum of all the primes below two million.
@@ -126,6 +135,7 @@ object Problems {
     val rez = primes.takeWhile(_ < 2000000).foldLeft(0L)(_ + _) //fold left instead of sum bc of MAX_INT
     assert(rez == solutions("10").toLong)
   }
+
   problemMap += ("010" -> p010)
 
   //What is the greatest product of four adjacent numbers in the same direction (up, down, left, right, or diagonally)
@@ -146,6 +156,7 @@ object Problems {
     val rez = List(rows, cols, backSlash, forwardSlash).flatMap(_.map(_.sliding(4).toList.map(_.product))).flatten.max
     assert(rez == solutions("11").toInt)
   }
+
   problemMap += ("011" -> p011)
 
   //What is the value of the first triangle number to have over five hundred divisors?
@@ -162,6 +173,7 @@ object Problems {
     val num = (501 to Int.MaxValue).find(x => ndivisors(triangle(x)) > 500).get
     assert(triangle(num) == solutions("12").toInt)
   }
+
   problemMap += ("012" -> p012)
 
   //Work out the first ten digits of the sum of the following one-hundred 50-digit numbers.
@@ -169,6 +181,7 @@ object Problems {
     val rez = input("013.txt").map(BigInt(_)).sum.toString.substring(0, 10)
     assert(rez == solutions("13"))
   }
+
   problemMap += ("013" -> p013)
 
   //Which starting number, under one million, produces the longest chain?
@@ -186,6 +199,7 @@ object Problems {
     val rez = (1 until 1000000).map(x => (x, collatz(x, 1))).maxBy(_._2)._1
     assert(rez == solutions("14").toInt)
   }
+
   problemMap += ("014" -> p014)
 
   //Starting in the top left corner of a 2×2 grid, and only being able to move to the right and down, there are exactly
@@ -207,6 +221,7 @@ object Problems {
 
     assert(nPaths(20) == solutions("15").toLong)
   }
+
   problemMap += ("015" -> p015)
 
   //What is the sum of the digits of the number 2^1000?
@@ -214,6 +229,7 @@ object Problems {
     val rez = Seq.fill(1000)(BigInt(2)).product.toString.toCharArray.map(_.toString.toInt).sum
     assert(rez == solutions("16").toInt)
   }
+
   problemMap += ("016" -> p016)
 
   def p017(): Unit = {
@@ -238,6 +254,7 @@ object Problems {
     val rez = (0 to 999).map(english).mkString("").length + "onethousand".length
     assert(rez == solutions("17").toInt)
   }
+
   problemMap += ("017" -> p017)
 
   //Find the maximum total from top to bottom of the triangle below:
@@ -262,6 +279,7 @@ object Problems {
     }
     assert(reduce(rows).max == solutions("18").toInt)
   }
+
   problemMap += ("018" -> p018)
 
   //How many Sundays fell on the first of the month during the twentieth century (1 Jan 1901 to 31 Dec 2000)?
@@ -270,7 +288,9 @@ object Problems {
     val sdf = new SimpleDateFormat("yyyy/M/d")
     val firsts = for (year <- (1901 to 2000);
                       month <- (1 to 12)
-    ) yield { cal.setTime(sdf.parse("" + year + "/" +  month + "/1" )); cal.get(Calendar.DAY_OF_WEEK) }
+    ) yield {
+        cal.setTime(sdf.parse("" + year + "/" + month + "/1")); cal.get(Calendar.DAY_OF_WEEK)
+      }
 
     assert(firsts.count(_ == 1) == solutions("19").toInt)
   }
@@ -280,13 +300,15 @@ object Problems {
     val rez = (BigInt(2) to BigInt(100)).product.toString.toCharArray.map(_.toString.toInt).sum
     assert(rez == solutions("20").toInt)
   }
+
   problemMap += ("020" -> p020)
 
   //Evaluate the sum of all the amicable numbers under 10000
   def divisors(n: Int): List[Int] = {
     if (n == 0) List()
-    else (1 to n/2).filter(n % _ == 0).toList
+    else (1 to n / 2).filter(n % _ == 0).toList
   }
+
   def p021(): Unit = {
     val zipped = (0 until 10000).map(divisors(_).sum).zipWithIndex
     def amicable(e: (Int, Int)): Boolean = {
@@ -296,19 +318,21 @@ object Problems {
     val ams = zipped.filter(amicable).map(_._2)
     assert(ams.sum == solutions("21").toInt)
   }
+
   problemMap += ("021" -> p021)
 
   //For example, when the list is sorted into alphabetical order, COLIN, which is worth 3 + 15 + 12 + 9 + 14 = 53,
   //is the 938th name in the list. So, COLIN would obtain a score of 938 × 53 = 49714.
   //What is the total of all the name scores in the file?
   def p022(): Unit = {
-    val cleaned = input("022.txt").mkString("").split(",").map(_.replaceAll("\"","")).sorted
+    val cleaned = input("022.txt").mkString("").split(",").map(_.replaceAll("\"", "")).sorted
     assert(cleaned
       .map(_.toCharArray.map(_.toInt - 64).sum)
       .zipWithIndex
       .map(zi => zi._1 * (zi._2 + 1))
       .sum == solutions("22").toInt)
   }
+
   problemMap += ("022" -> p022)
 
   //As 12 is the smallest abundant number, 1 + 2 + 3 + 4 + 6 = 16, the smallest number that can be written as the sum of
@@ -322,7 +346,7 @@ object Problems {
     val max = 28123
     val abundant = (1 to max).filter(x => divisors(x).sum > x)
     val S = scala.collection.mutable.Set.empty[Int]
-    for (a <- abundant; b <-abundant) {
+    for (a <- abundant; b <- abundant) {
       if (a + b <= max) {
         S += (a + b)
       }
@@ -330,6 +354,7 @@ object Problems {
     val rez = (1 to max).toSet &~ S
     assert(rez.toList.sum == solutions("23").toInt)
   }
+
   problemMap += ("023" -> p023)
 
   //What is the millionth lexicographic permutation of the digits 0, 1, 2, 3, 4, 5, 6, 7, 8 and 9?
@@ -337,17 +362,19 @@ object Problems {
     val rez = (0 to 9).permutations.drop(999999).take(1).next()
     assert(rez.mkString("") == solutions("24"))
   }
+
   problemMap += ("024" -> p024)
 
   //What is the index of the first term in the Fibonacci sequence to contain 1000 digits?
   def p025(): Unit = {
     assert(bigFibs.indexWhere(_.toString.length >= 1000) == solutions("25").toInt)
   }
+
   problemMap += ("025" -> p025)
 
   //Find the value of d < 1000 for which 1/d contains the longest recurring cycle in its decimal fraction part.
   def p026(): Unit = {
-    def cycleLength(num: Int, denom: Int = 1, remainders: List[Int] = List()) : Int = {
+    def cycleLength(num: Int, denom: Int = 1, remainders: List[Int] = List()): Int = {
       if (remainders.contains(denom)) {
         remainders.length
       } else if (denom % num == 0) {
@@ -361,6 +388,7 @@ object Problems {
     val rez = (1 to 999).map(cycleLength(_)).zipWithIndex.maxBy(_._1)._2 + 1
     assert(rez == solutions("26").toInt)
   }
+
   problemMap += ("026" -> p026)
 
   //  Considering quadratics of the form:
@@ -374,17 +402,20 @@ object Problems {
   //  primes for consecutive values of n, starting with n = 0.
   def p027(): Unit = {
     val coefs = (-999 to 999)
-    def quadratic(a: Int, b: Int)(n: Int) = { n*n + a*n + b }
+    def quadratic(a: Int, b: Int)(n: Int) = {
+      n * n + a * n + b
+    }
     val twoMil = primes.takeWhile(_ <= 200000).toList
     def isPrime(n: Int): Boolean = {
       twoMil.contains(n)
     }
     def quadraticPrimeLength(a: Int, b: Int): Int = {
-      from(0).takeWhile(n => isPrime(quadratic(a,b)(n))).toList.length
+      from(0).takeWhile(n => isPrime(quadratic(a, b)(n))).toList.length
     }
-    val rez = coefs.flatMap(a => coefs.map(b => ((a,b), quadraticPrimeLength(a,b)))).maxBy(_._2)
+    val rez = coefs.flatMap(a => coefs.map(b => ((a, b), quadraticPrimeLength(a, b)))).maxBy(_._2)
     assert(rez._1._1 * rez._1._2 == solutions("27").toInt)
   }
+
   problemMap += ("027" -> p027)
 
   //  Starting with the number 1 and moving to the right in a clockwise direction a 5 by 5 spiral is formed as follows:
@@ -402,8 +433,9 @@ object Problems {
     //The lower right (LR) number of each centered square closed form is: 4n^2 - 10n + 7
     //The other corners are LR + 2(n-1), + 4(n-1), + 6(n-1)
     //Sum of square corners: 4*LR + 12(n-1) = 16n^2 - 28n + 16, for n > 1
-    assert(1 + (2 to 501).map(n => 16*n*n - 28*n + 16).sum == solutions("28").toInt)
+    assert(1 + (2 to 501).map(n => 16 * n * n - 28 * n + 16).sum == solutions("28").toInt)
   }
+
   problemMap += ("028" -> p028)
 
   //  Consider all integer combinations of a^b for 2 ≤ a ≤ 5 and 2 ≤ b ≤ 5:
@@ -425,6 +457,7 @@ object Problems {
     val rez = nums.flatMap(a => nums.map(b => BigInt(a).pow(b))).toSet.size
     assert(rez == solutions("29").toInt)
   }
+
   problemMap += ("029" -> p029)
 
   //  Surprisingly there are only three numbers that can be written as the sum of fourth powers of their digits:
@@ -447,6 +480,7 @@ object Problems {
     val rez = (10 to max).filter(x => x == fifthSum(x))
     assert(rez.sum == solutions("30").toInt)
   }
+
   problemMap += ("030" -> p030)
 
   //  In England the currency is made up of pound, £, and pence, p, and there are eight coins in general circulation:
@@ -482,6 +516,7 @@ object Problems {
     }
     assert(findCombos(200, pairs).size == solutions("31").toInt)
   }
+
   problemMap += ("031" -> p031)
 
   //  We shall say that an n-digit number is pandigital if it makes use of all the digits 1 to n exactly once;
@@ -497,15 +532,16 @@ object Problems {
   def p032(): Unit = {
     val pandigits = (1 to 9).toSet
     def uniqueNumbers(a: Int, b: Int, c: Int): Boolean = {
-      val nums = List(a,b,c).flatMap(_.toString.toCharArray.map(_ - 48))
+      val nums = List(a, b, c).flatMap(_.toString.toCharArray.map(_ - 48))
       nums.size == pandigits.size && nums.toSet == pandigits
     }
     def pandigital(n: Int): Boolean = {
-      divisors(n).exists(d => uniqueNumbers(n/d, d, n))
+      divisors(n).exists(d => uniqueNumbers(n / d, d, n))
     }
     val rez = (1000 to 10000).filter(pandigital(_))
     assert(rez.sum == solutions("32").toInt)
   }
+
   problemMap += ("032" -> p032)
 
   //  The fraction 49/98 is a curious fraction, as an inexperienced mathematician in attempting to simplify it may
@@ -520,8 +556,8 @@ object Problems {
   def p033(): Unit = {
     def simplify(num: Int, denom: Int): (Int, Int) = {
       (2 to num).reverse.find(x => num % x == 0 && denom % x == 0) match {
-        case Some(i) => simplify(num/i, denom/i)
-        case None => (num,denom)
+        case Some(i) => simplify(num / i, denom / i)
+        case None => (num, denom)
       }
     }
 
@@ -529,21 +565,24 @@ object Problems {
     def isCurious(a: Int, b: Int): Boolean = {
       val aList = a.toString.toCharArray.map(_ - 48)
       val bList = b.toString.toCharArray.map(_ - 48)
-      if (aList(1) == bList(1)) { false }
+      if (aList(1) == bList(1)) {
+        false
+      }
       else if (aList(0) == bList(1)) {
         aList(1) * b == bList(0) * a
       } else if (aList(1) == bList(0)) {
         aList(0) * b == bList(1) * a
-      } else  {
+      } else {
         false
       }
     }
 
-    val fracs = nums.flatMap(a => (a+1 to 99).map(b => (a,b))).filter(f => isCurious(f._1, f._2))
+    val fracs = nums.flatMap(a => (a + 1 to 99).map(b => (a, b))).filter(f => isCurious(f._1, f._2))
     val num = fracs.map(_._1).product
     val denom = fracs.map(_._2).product
     assert(simplify(num, denom)._2 == solutions("33").toInt)
   }
+
   problemMap += ("033" -> p033)
 
   //    145 is a curious number, as 1! + 4! + 5! = 1 + 24 + 120 = 145.
@@ -560,6 +599,7 @@ object Problems {
     val nums = (10 to max).filter(isSumOfFactorial)
     assert(nums.sum == solutions("34").toInt)
   }
+
   problemMap += ("034" -> p034)
 
   //  The number, 197, is called a circular prime because all rotations of the digits: 197, 971, and 719, are
@@ -583,6 +623,7 @@ object Problems {
 
     assert(ps.filter(n => rotations(n).forall(ps.contains(_))).size == solutions("35").toInt)
   }
+
   problemMap += ("035" -> p035)
 
   //  The decimal number, 585 = 10010010012 (binary), is palindromic in both bases.
@@ -595,8 +636,9 @@ object Problems {
       val s = java.lang.Integer.toString(n, radix)
       s == s.reverse
     }
-    assert((1 to 999999).filter(x => palindrome(x,2) && palindrome(x,10)).sum == solutions("36").toInt)
+    assert((1 to 999999).filter(x => palindrome(x, 2) && palindrome(x, 10)).sum == solutions("36").toInt)
   }
+
   problemMap += ("036" -> p036)
 
   //  The number 3797 has an interesting property. Being prime itself, it is possible to continuously remove digits
@@ -621,6 +663,7 @@ object Problems {
     val rez = pMil.dropWhile(_ < 10).filter(p => (truncate(p) ::: truncate(p, false)).forall(pSet.contains(_)))
     assert(rez.sum == solutions("37").toInt)
   }
+
   problemMap += ("037" -> p037)
 
   //  Take the number 192 and multiply it by each of 1, 2, and 3:
@@ -645,6 +688,7 @@ object Problems {
     val rez = (9000 to 9999).filter(isPandigital).max
     assert(rez.toString + (rez * 2).toString == solutions("38"))
   }
+
   problemMap += ("038" -> p038)
 
   //  If p is the perimeter of a right angle triangle with integral length sides, {a,b,c}, there are exactly three
@@ -654,16 +698,19 @@ object Problems {
   //
   //  For which value of p ≤ 1000, is the number of solutions maximised?
   def p039(): Unit = {
-    def right(a: Int, b: Int, c: Int): Boolean = { a*a + b*b == c*c }
+    def right(a: Int, b: Int, c: Int): Boolean = {
+      a * a + b * b == c * c
+    }
     def rights(p: Int): Int = {
       val tris = for (a <- 1 to p - 2;
-           b <- a + 1 to p - 2;
-           c = p - a - b;
-           if right(a,b,c)) yield (a,b,c)
+                      b <- a + 1 to p - 2;
+                      c = p - a - b;
+                      if right(a, b, c)) yield (a, b, c)
       tris.size
     }
     assert((2 to 1000).map(p => (p, rights(p))).maxBy(_._2)._1 == solutions("39").toInt)
   }
+
   problemMap += ("039" -> p039)
 
   //  An irrational decimal fraction is created by concatenating the positive integers:
@@ -676,14 +723,19 @@ object Problems {
   //
   //    d1 × d10 × d100 × d1000 × d10000 × d100000 × d1000000
   def p040(): Unit = {
-    def genChamp(s: Int, n: Int =1, c: Vector[Char]=Vector()): Vector[Char] = {
-      if (c.size >= s) { c }
-      else { genChamp(s, n+1, c ++ n.toString.toCharArray.toVector) }
+    def genChamp(s: Int, n: Int = 1, c: Vector[Char] = Vector()): Vector[Char] = {
+      if (c.size >= s) {
+        c
+      }
+      else {
+        genChamp(s, n + 1, c ++ n.toString.toCharArray.toVector)
+      }
     }
     val champ = genChamp(1000000)
     val rez = (0 to 6).map(p => champ(BigInt(10).pow(p).toInt - 1).toString.toInt)
     assert(rez.product == solutions("40").toInt)
   }
+
   problemMap += ("040" -> p040)
 
   //  We shall say that an n-digit number is pandigital if it makes use of all the digits 1 to n exactly once. For
@@ -692,10 +744,13 @@ object Problems {
   //  What is the largest n-digit pandigital prime that exists?
   def p041(): Unit = {
     //all 8,9 pandigital numbers are divisible by 3, so only check 7
-    def isPrime(n: Int):Boolean = { (2 to Math.sqrt(n).toInt).forall(n % _ != 0) }
+    def isPrime(n: Int): Boolean = {
+      (2 to Math.sqrt(n).toInt).forall(n % _ != 0)
+    }
     val rez = (1 to 7).reverse.permutations.find(p => isPrime(p.mkString("").toInt))
     assert(rez.get.mkString("") == solutions("41"))
   }
+
   problemMap += ("041" -> p041)
 
   //  The nth term of the sequence of triangle numbers is given by, tn = ½n(n+1); so the first ten triangle numbers are:
@@ -709,14 +764,17 @@ object Problems {
   //  Using words.txt (right click and 'Save Link/Target As...'), a 16K text file containing nearly two-thousand common
   //  English words, how many are triangle words?
   def p042(): Unit = {
-    def tri(n: Int): Int = { (n*n + n) / 2}
+    def tri(n: Int): Int = {
+      (n * n + n) / 2
+    }
     val triSet = (1 to 100).map(tri).toSet
     def isTriangle(w: String): Boolean = {
       triSet.contains(w.toCharArray.map(_ - 64).sum)
     }
-    val rez = input("p042_words.txt").mkString("").split(",").count(w => isTriangle(w.replaceAll("[^A-Z]","")))
+    val rez = input("p042_words.txt").mkString("").split(",").count(w => isTriangle(w.replaceAll("[^A-Z]", "")))
     assert(rez == solutions("42").toInt)
   }
+
   problemMap += ("042" -> p042)
 
   //  The number, 1406357289, is a 0 to 9 pandigital number because it is made up of each of the digits 0 to 9 in
@@ -735,9 +793,10 @@ object Problems {
   //  Find the sum of all 0 to 9 pandigital numbers with this property.
   def p043(): Unit = {
     val primeMap = Map(2 -> 2, 3 -> 3, 4 -> 5, 5 -> 7, 6 -> 11, 7 -> 13, 8 -> 17)
-    val rez = (0 to 9).permutations.filter(p => (2 to 8).forall(s => p.drop(s-1).take(3).mkString("").toInt % primeMap(s) == 0))
+    val rez = (0 to 9).permutations.filter(p => (2 to 8).forall(s => p.drop(s - 1).take(3).mkString("").toInt % primeMap(s) == 0))
     assert(rez.map(v => BigInt(v.mkString(""))).sum.toString == solutions("43"))
   }
+
   problemMap += ("043" -> p043)
 
   //  Pentagonal numbers are generated by the formula, Pn=n(3n−1)/2. The first ten pentagonal numbers are:
@@ -749,19 +808,28 @@ object Problems {
   //  Find the pair of pentagonal numbers, Pj and Pk, for which their sum and difference are pentagonal and
   //  D = |Pk − Pj| is minimised; what is the value of D?
   def p044(): Unit = {
-    def pent(n: Int): Int = { (3*n*n - n)/2 }
-    def abs(n: Int): Int = { if (n >= 0) { n } else { -n } }
+    def pent(n: Int): Int = {
+      (3 * n * n - n) / 2
+    }
+    def abs(n: Int): Int = {
+      if (n >= 0) {
+        n
+      } else {
+        -n
+      }
+    }
     val max = 10000
     val pents = (1 to max).map(pent).toSet
     val pairs = for (j <- 1 to max;
-         k <- (j + 1) to max;
-         pj = pent(j);
-         pk = pent(k);
-         d = abs(pj-pk);
-         if pents.contains(pj + pk) && pents.contains(d)
-    ) yield ((j,k), d)
+                     k <- (j + 1) to max;
+                     pj = pent(j);
+                     pk = pent(k);
+                     d = abs(pj - pk);
+                     if pents.contains(pj + pk) && pents.contains(d)
+    ) yield ((j, k), d)
     assert(pairs.minBy(_._2)._2 == solutions("44").toInt)
   }
+
   problemMap += ("044" -> p044)
 
   //  Triangle, pentagonal, and hexagonal numbers are generated by the following formulae:
@@ -773,21 +841,36 @@ object Problems {
   //
   //  Find the next triangle number that is also pentagonal and hexagonal.
   def p045(): Unit = {
-    def tri(n: Long): Long = { (n*n + n) / 2 }
-    def pent(n: Long): Long = { (3*n*n - n) / 2 }
-    def hex(n: Long): Long = { 2*n*n - n }
+    def tri(n: Long): Long = {
+      (n * n + n) / 2
+    }
+    def pent(n: Long): Long = {
+      (3 * n * n - n) / 2
+    }
+    def hex(n: Long): Long = {
+      2 * n * n - n
+    }
 
     def findNext(ti: Long, pi: Long, hi: Long): (Long, Long, Long, Long) = {
       val tv = tri(ti)
       val pv = pent(pi)
       val hv = hex(hi)
-      if (tv == pv && tv == hv) { (ti, pi, hi, tv) }
-      else if (tv < pv && tv < hv) { findNext(ti + 1, pi, hi) }
-      else if (pv < hv) { findNext(ti, pi + 1, hi) }
-      else { findNext(ti, pi, hi + 1) }
+      if (tv == pv && tv == hv) {
+        (ti, pi, hi, tv)
+      }
+      else if (tv < pv && tv < hv) {
+        findNext(ti + 1, pi, hi)
+      }
+      else if (pv < hv) {
+        findNext(ti, pi + 1, hi)
+      }
+      else {
+        findNext(ti, pi, hi + 1)
+      }
     }
     assert(findNext(286L, 166L, 144L)._4 == solutions("45").toLong)
   }
+
   problemMap += ("045" -> p045)
 
   //  It was proposed by Christian Goldbach that every odd composite number can be written as the sum of a prime and
@@ -805,17 +888,22 @@ object Problems {
   //  What is the smallest odd composite that cannot be written as the sum of a prime and twice a square?
   def p046(): Unit = {
     def p1000 = primes.take(10000).toSet
-    def isPrime(n: Int): Boolean = { p1000.contains(n) }
+    def isPrime(n: Int): Boolean = {
+      p1000.contains(n)
+    }
     def oddComposites(n: Int = 9): Stream[Int] = {
-      val next = from(n+2).find(!isPrime(_))
+      val next = from(n + 2).find(!isPrime(_))
       n #:: oddComposites(next.get)
     }
-    def sq(n: Int): Int = { n*n }
+    def sq(n: Int): Int = {
+      n * n
+    }
     def summable(n: Int): Boolean = {
       (1 to Math.sqrt(n).toInt).exists(i => isPrime(n - 2 * sq(i)))
     }
     assert(oddComposites().find(!summable(_)).get == solutions("46").toInt)
   }
+
   problemMap += ("046" -> p046)
 
   //  The first two consecutive numbers to have two distinct prime factors are:
@@ -832,13 +920,14 @@ object Problems {
   //  Find the first four consecutive integers to have four distinct prime factors. What is the first of these numbers?
   def p047(): Unit = {
     def primeFactors(n: Int, np: Int): Boolean = {
-      primes.takeWhile(_ <= n/2).count(n % _ == 0) >= np
+      primes.takeWhile(_ <= n / 2).count(n % _ == 0) >= np
     }
     def consecutivePrimes(n: Int, np: Int): Boolean = {
-      (n to (n + np - 1)).forall(i => primeFactors(i,np))
+      (n to (n + np - 1)).forall(i => primeFactors(i, np))
     }
-    assert(from(644).find(n => consecutivePrimes(n,4)).get == solutions("47").toInt)
+    assert(from(644).find(n => consecutivePrimes(n, 4)).get == solutions("47").toInt)
   }
+
   problemMap += ("047" -> p047)
 
   //  The series, 1^1 + 2^2 + 3^3 + ... + 10^10 = 10405071317.
@@ -847,6 +936,7 @@ object Problems {
   def p048(): Unit = {
     assert((1 to 1000).map(x => BigInt(x).pow(x)).sum.toString.takeRight(10) == solutions("48"))
   }
+
   problemMap += ("048" -> p048)
 
   //  The arithmetic sequence, 1487, 4817, 8147, in which each of the terms increases by 3330, is unusual in two ways:
@@ -859,7 +949,9 @@ object Problems {
   //   What 12-digit number do you form by concatenating the three terms in this sequence?
   def p049(): Unit = {
     val candidates = primes.dropWhile(_ < 1000).takeWhile(_ < 10000).groupBy(_.toString.sorted).filter(_._2.size >= 3)
-    def abs(n: Int): Int = { if (n > 0) n else -n }
+    def abs(n: Int): Int = {
+      if (n > 0) n else -n
+    }
     def commonDiff(nums: List[Int]): Boolean = {
       nums.sorted.sliding(2).map(w => w(1) - w(0)).toList.distinct.size == 1
     }
@@ -867,6 +959,7 @@ object Problems {
     val other = rez.filter(_.flatten.head != 1487).flatten.flatten
     assert(other.mkString("") == solutions("49"))
   }
+
   problemMap += ("049" -> p049)
 
   //  The prime 41, can be written as the sum of six consecutive primes:
@@ -880,8 +973,10 @@ object Problems {
   def p050(): Unit = {
     val ps = primes.takeWhile(_ < 1000000)
     val psSet = ps.toSet
-    def takeUntilOver(s: Stream[Int], limit: Int, total: Int = 0, biggest: Int=1, size: Int = 0, count: Int=0): (Int, Int) = {
-      if (limit <= 0 || s.isEmpty) { (biggest, size) }
+    def takeUntilOver(s: Stream[Int], limit: Int, total: Int = 0, biggest: Int = 1, size: Int = 0, count: Int = 0): (Int, Int) = {
+      if (limit <= 0 || s.isEmpty) {
+        (biggest, size)
+      }
       else {
         val t = total + s.head
         if (psSet.contains(t)) {
@@ -896,9 +991,10 @@ object Problems {
       val start = ps.dropWhile(_ < n)
       takeUntilOver(start, limit)
     }
-    val rez = ps.map(longestWindow(_,1000000)).maxBy(_._2)
+    val rez = ps.map(longestWindow(_, 1000000)).maxBy(_._2)
     assert(rez._1 == solutions("50").toInt)
   }
+
   problemMap += ("050" -> p050)
 
   //  By replacing the 1st digit of the 2-digit number *3, it turns out that six of the nine possible values:
@@ -912,7 +1008,7 @@ object Problems {
   //  digit, is part of an eight prime value family.
   def p051(): Unit = {
     def asterize(s: String, indices: List[Int]): String = {
-      indices.foldLeft(s)((str, i) => str.updated(i-1,"*").mkString(""))
+      indices.foldLeft(s)((str, i) => str.updated(i - 1, "*").mkString(""))
     }
 
     def isValid(ast: String, n: String): Boolean = {
@@ -933,6 +1029,7 @@ object Problems {
     val rez = fams.groupBy(_._1).toList.filter(_._2.length == 8).minBy(_._2.map(_._2).min)
     assert(rez._1.replaceAll("\\*", "1") == solutions("51"))
   }
+
   problemMap += ("051" -> p051)
 
   //  It can be seen that the number, 125874, and its double, 251748, contain exactly the same digits, but in
@@ -940,11 +1037,16 @@ object Problems {
   //
   //  Find the smallest positive integer, x, such that 2x, 3x, 4x, 5x, and 6x, contain the same digits.
   def p052(): Unit = {
-    def multiples(m: Int, n: Int): List[Int] = { (1 to m).map(_ * n).toList }
-    def sortInt(n: Int): Int = { n.toString.toCharArray.sorted.mkString("").toInt }
+    def multiples(m: Int, n: Int): List[Int] = {
+      (1 to m).map(_ * n).toList
+    }
+    def sortInt(n: Int): Int = {
+      n.toString.toCharArray.sorted.mkString("").toInt
+    }
     val rez = from(1).find(n => multiples(6, n).map(sortInt).distinct.length == 1)
     assert(rez.get == solutions("52").toInt)
   }
+
   problemMap += ("052" -> p052)
 
   //  There are exactly ten ways of selecting three from five, 12345:
@@ -964,18 +1066,67 @@ object Problems {
   //  How many, not necessarily distinct, values of  nCr, for 1 ≤ n ≤ 100, are greater than one-million?
   def p053(): Unit = {
     def biggerThan(n: Int, k: Int, thresh: Int): Boolean = {
-      val num = (k+1 to n)
-      val denom = (1 to (n-k))
+      val num = (k + 1 to n)
+      val denom = (1 to (n - k))
       (num.map(BigInt(_)).product / denom.map(BigInt(_)).product) > thresh
     }
 
-    val all = for (n <- 1 to 100; k <- 1 until n) yield biggerThan(n,k,1000000)
+    val all = for (n <- 1 to 100; k <- 1 until n) yield biggerThan(n, k, 1000000)
     assert(all.count(p => p) == solutions("53").toInt)
   }
+
   problemMap += ("053" -> p053)
 
   //How many poker hands does player 1 win
+  /*
+    I started by making a function for each hand type (HK, P, 2P, etc.).  Was chasing down a bug, got frustrated,
+    and eventually started over after reading this beautiful, concise python solution:
+    http://blog.dreamshire.com/project-euler-54-solution/
+   */
   def p054(): Unit = {
+    val values = "23456789TJQKA".toCharArray.zipWithIndex.toMap
+    val straights = (2 to 10).map(i => (0 to 4).map(_ + i - 2).reverse).toList ::: List(Vector(12,3,2,1,0))
+    val ranks = Vector(List(1,1,1,1,1), List(2,1,1,1), List(2,2,1), List(3,1,1), List(), List(), List(3,2), List(4,1))
+
+    def winner(line: String): Int = {
+      val cards = line.split(" ")
+      if (gt(score(cards.take(5)), score(cards.takeRight(5)))) { 1 } else { 2 }
+    }
+
+    def gt(a: List[Int], b: List[Int]): Boolean = {
+      if (a.isEmpty) { false }
+      else if (b.isEmpty) { true }
+      else if (a.head < b.head) { false }
+      else if (a.head > b.head) { true }
+      else { gt(a.tail, b.tail) }
+    }
+
+    def sortTuple(a: (Int, Seq[String]), b: (Int, Seq[String])): Boolean = {
+      if (a._2.length != b._2.length) {
+        a._2.length - b._2.length > 0
+      } else {
+        a._1 - b._1 > 0
+      }
+    }
+
+    def score(cards: Seq[String]): List[Int] = {
+      val groups = cards.groupBy(_.head).toList.map(kv => (values(kv._1), kv._2)).sortWith(sortTuple)
+      val numbers = groups.map(_._1)
+      val isStraight = straights.contains(numbers.toVector)
+      val isFlush = cards.map(_.charAt(1)).distinct.length == 1
+      if (isStraight && isFlush) {
+        List(8) ::: numbers
+      } else if (isStraight) {
+        List(4) ::: numbers
+      } else if (isFlush) {
+        List(5) ::: numbers
+      } else {
+        List(ranks.indexOf(groups.map(_._2.length))) ::: numbers
+      }
+    }
+
+    assert(input("p054_poker.txt").map(winner).count(_ == 1) == solutions("54").toInt)
   }
 
+  problemMap += ("054" -> p054)
 }

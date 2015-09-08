@@ -16,5 +16,5 @@ object Main extends scala.App {
 //  problemMap.keys.toList.sorted.foreach(key => if (!takeTooLong.contains(key)) {
 //    timeIt(key, problemMap(key))
 //  })
-  timeIt("053", problemMap("053"))
+  timeIt("054", problemMap("054"))
 }

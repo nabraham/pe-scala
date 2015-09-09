@@ -1085,20 +1085,34 @@ object Problems {
    */
   def p054(): Unit = {
     val values = "23456789TJQKA".toCharArray.zipWithIndex.toMap
-    val straights = (2 to 10).map(i => (0 to 4).map(_ + i - 2).reverse).toList ::: List(Vector(12,3,2,1,0))
-    val ranks = Vector(List(1,1,1,1,1), List(2,1,1,1), List(2,2,1), List(3,1,1), List(), List(), List(3,2), List(4,1))
+    val straights = (2 to 10).map(i => (0 to 4).map(_ + i - 2).reverse).toList ::: List(Vector(12, 3, 2, 1, 0))
+    val ranks = Vector(List(1, 1, 1, 1, 1), List(2, 1, 1, 1), List(2, 2, 1), List(3, 1, 1), List(), List(), List(3, 2), List(4, 1))
 
     def winner(line: String): Int = {
       val cards = line.split(" ")
-      if (gt(score(cards.take(5)), score(cards.takeRight(5)))) { 1 } else { 2 }
+      if (gt(score(cards.take(5)), score(cards.takeRight(5)))) {
+        1
+      } else {
+        2
+      }
     }
 
     def gt(a: List[Int], b: List[Int]): Boolean = {
-      if (a.isEmpty) { false }
-      else if (b.isEmpty) { true }
-      else if (a.head < b.head) { false }
-      else if (a.head > b.head) { true }
-      else { gt(a.tail, b.tail) }
+      if (a.isEmpty) {
+        false
+      }
+      else if (b.isEmpty) {
+        true
+      }
+      else if (a.head < b.head) {
+        false
+      }
+      else if (a.head > b.head) {
+        true
+      }
+      else {
+        gt(a.tail, b.tail)
+      }
     }
 
     def sortTuple(a: (Int, Seq[String]), b: (Int, Seq[String])): Boolean = {
@@ -1129,4 +1143,219 @@ object Problems {
   }
 
   problemMap += ("054" -> p054)
+
+  //  If we take 47, reverse and add, 47 + 74 = 121, which is palindromic.
+  //
+  //  Not all numbers produce palindromes so quickly. For example,
+  //
+  //  349 + 943 = 1292,
+  //  1292 + 2921 = 4213
+  //  4213 + 3124 = 7337
+  //
+  //  That is, 349 took three iterations to arrive at a palindrome.
+  //
+  //  Although no one has proved it yet, it is thought that some numbers, like 196, never produce a palindrome. A number
+  //  that never forms a palindrome through the reverse and add process is called a Lychrel number. Due to the theoretical
+  //  nature of these numbers, and for the purpose of this problem, we shall assume that a number is Lychrel until proven
+  //  otherwise. In addition you are given that for every number below ten-thousand, it will either (i) become a
+  //  palindrome in less than fifty iterations, or, (ii) no one, with all the computing power that exists, has managed so
+  //  far to map it to a palindrome. In fact, 10677 is the first number to be shown to require over fifty iterations
+  //  before producing a palindrome: 4668731596684224866951378664 (53 iterations, 28-digits).
+  //
+  //  Surprisingly, there are palindromic numbers that are themselves Lychrel numbers; the first example is 4994.
+  //
+  //  How many Lychrel numbers are there below ten-thousand?
+  //
+  //  NOTE: Wording was modified slightly on 24 April 2007 to emphasise the theoretical nature of Lychrel numbers.
+  def p055(): Unit = {
+    def reverseAndSum(n: BigInt): BigInt = {
+      n + BigInt(n.toString.reverse)
+    }
+    def isLychrel(n: Int): Boolean = {
+      isBigLychrel(reverseAndSum(BigInt(n)), 49)
+    }
+    def isBigLychrel(n: BigInt, i: Int): Boolean = {
+      if (i == 0) {
+        true
+      }
+      else if (n.toString == n.toString.reverse) {
+        false
+      }
+      else {
+        isBigLychrel(reverseAndSum(n), i - 1)
+      }
+    }
+
+    assert((0 to 9999).map(isLychrel).count(identity) == solutions("55").toInt)
+  }
+
+  problemMap += ("055" -> p055)
+
+  //  A googol (10^100) is a massive number: one followed by one-hundred zeros; 100^100 is almost unimaginably large: one
+  //  followed by two-hundred zeros. Despite their size, the sum of the digits in each number is only 1.
+  //
+  //  Considering natural numbers of the form, a^b, where a, b < 100, what is the maximum digital sum?
+  def p056(): Unit = {
+    val rez = (0 to 99).flatMap(a => (0 to 99).map(b => BigInt(a).pow(b).toString.toCharArray.map(_ - 48).sum)).max
+    assert(rez == solutions("56").toInt)
+  }
+
+  problemMap += ("056" -> p056)
+
+  //  It is possible to show that the square root of two can be expressed as an infinite continued fraction.
+  //
+  //    √ 2 = 1 + 1/(2 + 1/(2 + 1/(2 + ... ))) = 1.414213...
+  //
+  //  By expanding this for the first four iterations, we get:
+  //
+  //  1 + 1/2 = 3/2 = 1.5
+  //  1 + 1/(2 + 1/2) = 7/5 = 1.4
+  //  1 + 1/(2 + 1/(2 + 1/2)) = 17/12 = 1.41666...
+  //  1 + 1/(2 + 1/(2 + 1/(2 + 1/2))) = 41/29 = 1.41379...
+  //
+  //  The next three expansions are 99/70, 239/169, and 577/408, but the eighth expansion, 1393/985, is the first
+  //  example where the number of digits in the numerator exceeds the number of digits in the denominator.
+  //
+  //  In the first one-thousand expansions, how many fractions contain a numerator with more digits than denominator?
+  def p057(): Unit = {
+    def fracs(num: BigInt = BigInt(3), denom: BigInt = BigInt(2)): Stream[(BigInt, BigInt)] = {
+      (num, denom) #:: fracs(num + denom * 2, denom + num)
+    }
+
+    val rez = fracs().take(1000).count(nd => nd._1.toString.length > nd._2.toString.length)
+    assert(rez == solutions("57").toInt)
+  }
+
+  problemMap += ("057" -> p057)
+
+  //  Starting with 1 and spiralling anticlockwise in the following way, a square spiral with side length 7 is formed.
+  //
+  //  37 36 35 34 33 32 31
+  //  38 17 16 15 14 13 30
+  //  39 18  5  4  3 12 29
+  //  40 19  6  1  2 11 28
+  //  41 20  7  8  9 10 27
+  //  42 21 22 23 24 25 26
+  //  43 44 45 46 47 48 49
+  //
+  //  It is interesting to note that the odd squares lie along the bottom right diagonal, but what is more interesting
+  //  is that 8 out of the 13 numbers lying along both diagonals are prime; that is, a ratio of 8/13 ≈ 62%.
+  //
+  //  If one complete new layer is wrapped around the spiral above, a square spiral with side length 9 will be formed.
+  //  If this process is continued, what is the side length of the square spiral for which the ratio of primes along
+  //  both diagonals first falls below 10%?
+  def p058(): Unit = {
+    def sq(n: Int) = {
+      n * n
+    }
+    def lowerRight(n: Int): Int = {
+      sq(n * 2 + 1)
+    }
+    def side(n: Int): Int = {
+      2 * n
+    }
+    def corners(n: Int): List[Int] = {
+      val lr = lowerRight(n)
+      val len = side(n)
+      (0 to 3).map(lr - len * _).toList
+    }
+    def isPrime(n: Int): Boolean = {
+      (2 to Math.sqrt(n).toInt).forall(n % _ != 0)
+    }
+
+    def takeWhileHigher(total: Int, primeCount: Int, count: Int, thresh: Float = 0.1F): Int = {
+      val cs = corners(count)
+      val newTotal = total + 4
+      val newPrimes = primeCount + cs.count(isPrime)
+      if (1.0F * newPrimes / newTotal < thresh) {
+        side(count) + 1
+      } else {
+        takeWhileHigher(newTotal, newPrimes, count + 1)
+      }
+    }
+
+    assert(takeWhileHigher(1, 0, 1) == solutions("58").toInt)
+  }
+
+  problemMap += ("058" -> p058)
+
+  //  Each character on a computer is assigned a unique code and the preferred standard is ASCII (American Standard
+  //  Code for Information Interchange). For example, uppercase A = 65, asterisk (*) = 42, and lowercase k = 107.
+  //
+  //  A modern encryption method is to take a text file, convert the bytes to ASCII, then XOR each byte with a given
+  //  value, taken from a secret key. The advantage with the XOR function is that using the same encryption key on the
+  //  cipher text, restores the plain text; for example, 65 XOR 42 = 107, then 107 XOR 42 = 65.
+  //
+  //  For unbreakable encryption, the key is the same length as the plain text message, and the key is made up of
+  //  random bytes. The user would keep the encrypted message and the encryption key in different locations, and without
+  //  both "halves", it is impossible to decrypt the message.
+  //
+  //  Unfortunately, this method is impractical for most users, so the modified method is to use a password as a key.
+  //  If the password is shorter than the message, which is likely, the key is repeated cyclically throughout the
+  //  message. The balance for this method is using a sufficiently long password key for security, but short enough to
+  //  be memorable.
+  //
+  //  Your task has been made easy, as the encryption key consists of three lower case characters. Using cipher.txt
+  //  (right click and 'Save Link/Target As...'), a file containing the encrypted ASCII codes, and the knowledge that
+  //  the plain text must contain common English words, decrypt the message and find the sum of the ASCII values in the
+  //  original text.
+  def p059(): Unit = {
+    val encrypted = input("p059_cipher.txt").mkString("").split(",").map(_.replaceAll("\"", "").toInt).toList
+    def decrypt(e: List[Int], key: List[Int]): List[Int] = {
+      e.zipWithIndex.map(XOR(key))
+    }
+    def XOR(key: List[Int])(e: (Int, Int)): Int = {
+      key(e._2 % key.length) ^ e._1
+    }
+    def containsWords(encrypted: List[Int], mustFind: List[String], key: List[Int]): Boolean = {
+      val decrypted = decrypt(encrypted, key).map(_.toChar).mkString("")
+      mustFind.forall(w => decrypted.contains(w))
+    }
+    val letters = ('a'.toInt to 'z'.toInt)
+    val keys = for (i <- letters; j <- letters; k <- letters) yield (List(i, j, k))
+
+    val secret = keys.find(k => containsWords(encrypted, List(" the ", " a "), k))
+    assert(decrypt(encrypted, secret.get).sum == solutions("59").toInt)
+  }
+
+  problemMap += ("059" -> p059)
+
+  //  The primes 3, 7, 109, and 673, are quite remarkable. By taking any two primes and concatenating them in any order
+  //  the result will always be prime. For example, taking 7 and 109, both 7109 and 1097 are prime. The sum of these
+  //  four primes, 792, represents the lowest sum for a set of four primes with this property.
+  //
+  //  Find the lowest sum for a set of five primes for which any two primes concatenate to produce another prime.
+  def p060(): Unit = {
+    def isPrime(n: Int): Boolean = {
+      (2 to Math.sqrt(n).toInt).forall(n % _ != 0)
+    }
+    def concatenate(a: Int, b: Int): Int = {
+      (a.toString + b.toString).toInt
+    }
+    def isConcatenatedPrime(a: Int, b: Int): Boolean = {
+      isPrime(concatenate(a, b)) && isPrime(concatenate(b, a))
+    }
+    def allPrime(n: Int, ps: Set[Int]): Boolean = {
+      ps.forall(p => isConcatenatedPrime(n,p))
+    }
+
+    val ps = primes.takeWhile(_ < 10000).toList
+    val results: scala.collection.mutable.Set[Set[Int]] = scala.collection.mutable.Set()
+    var done = false
+    def findSets(n: Int, ps: List[Int], curr: Set[Int] = Set()): Unit = {
+      if (n == 0) {
+        results += curr
+        done = true
+      } else if (!done) {
+        val valids = ps.filter(p => allPrime(p, curr))
+        valids.foreach(v => findSets(n-1, ps.dropWhile(_ <= v), curr + v))
+      }
+    }
+
+    findSets(5, ps)
+    assert(results.head.sum == solutions("60").toInt)
+    /*This finds a solution in 1.8s, but takes 80s to exhaustively search all, hence the use of mutables & var*/
+  }
+
+  problemMap += ("060" -> p060)
 }

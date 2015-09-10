@@ -28,8 +28,8 @@ object Common {
     }
 
   }
-  private val solutionMap = scala.io.Source.fromFile("solutions.txt").getLines.map(splitLine).toList.groupBy(_._1).mapValues(_.map(_._2))
+  private val solutionMap = scala.io.Source.fromFile("solutions.txt").getLines.map(splitLine).toMap
   def solutions(problem: String): String = {
-    solutionMap(problem).head
+    solutionMap(problem)
   }
 }

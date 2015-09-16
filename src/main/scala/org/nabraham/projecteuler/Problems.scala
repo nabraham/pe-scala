@@ -1486,5 +1486,55 @@ object Problems {
 
   problemMap += ("064" -> p064)
 
+  //  Find the sum of digits in the numerator of the 100th convergent of the continued fraction for e.
+  /*     index: 0  1  2  3   4  5  6   7   8
+     numerator: 2  3  8  11  19 87 106 193 1264
+          diff:    1  6  3   8  76 19  87  1158
+       m1 mult:       2         4          6
+  */
+  def p065(): Unit = {
+    def next(i: Int, m1: BigInt, m2: BigInt): BigInt = {
+      m2 + m1 * (if (i % 3 == 2) (i/3 + 1) * 2 else 1)
+    }
+
+    def recurNext(result: Vector[BigInt], target: Int): Vector[BigInt] = {
+      if (result.length == target) { result }
+      else {
+        val m1 = result.last
+        val m2 = result(result.length - 2)
+        val n = next(result.length, m1, m2)
+        recurNext(result :+ n, target)
+      }
+    }
+
+    val nums = recurNext(Vector(BigInt(2), BigInt(3)), 100)
+    assert(nums.last.toString.toCharArray.map(_ - 48).sum == solutions("65").toInt)
+  }
+  problemMap += ("065" -> p065)
+
+  //  Consider quadratic Diophantine equations of the form:
+  //
+  //    x2 – Dy2 = 1
+  //
+  //  For example, when D=13, the minimal solution in x is 6492 – 13×1802 = 1.
+  //
+  //  It can be assumed that there are no solutions in positive integers when D is square.
+  //
+  //  By finding minimal solutions in x for D = {2, 3, 5, 6, 7}, we obtain the following:
+  //
+  //  32 – 2×22 = 1
+  //  22 – 3×12 = 1
+  //  92 – 5×42 = 1
+  //  52 – 6×22 = 1
+  //  82 – 7×32 = 1
+  //
+  //  Hence, by considering minimal solutions in x for D ≤ 7, the largest x is obtained when D=5.
+  //
+  //  Find the value of D ≤ 1000 in minimal solutions of x for which the largest value of x is obtained.
+  def p066(): Unit = {
+  }
+  problemMap += ("066" -> p066)
+
+
 
 }
